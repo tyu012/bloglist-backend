@@ -1,0 +1,45 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+	"title": "My First Blog!",
+	"author": "Foo Bar",
+	"url": "example.com",
+	"likes": 1
+}
+
+###
+
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+	"title": "How To Use JavaScript",
+	"author": "Not a Beginner",
+	"url": "example.com/javascript",
+	"likes": 56
+}
+
+###
+
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+	"title": "Breakfast Recipes Daily",
+	"author": "Breakfast for Dinner",
+	"url": "blogs.example.com",
+	"likes": 99
+}
+
+###
+
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+	"title": "Dinner Recipes Daily",
+	"author": "Dinner for Breakfast",
+	"url": "blogs.example.com/dinner",
+	"likes": 98
+}
