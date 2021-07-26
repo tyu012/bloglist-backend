@@ -23,6 +23,14 @@ const listWithNoLikes = [
 ]
 const listWithSixBlogs = [
   {
+    _id: '5a422b891b54a676234d17fa',
+    title: 'First class tests',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+    likes: 10,
+    __v: 0
+  },
+  {
     _id: '5a422a851b54a676234d17f7',
     title: 'React patterns',
     author: 'Michael Chan',
@@ -44,14 +52,6 @@ const listWithSixBlogs = [
     author: 'Edsger W. Dijkstra',
     url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
     likes: 12,
-    __v: 0
-  },
-  {
-    _id: '5a422b891b54a676234d17fa',
-    title: 'First class tests',
-    author: 'Robert C. Martin',
-    url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
-    likes: 10,
     __v: 0
   },
   {
@@ -87,7 +87,41 @@ const listWithTwoFavorites = [
     url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
     likes: 7,
     __v: 0
-  }
+  },
+  {
+    _id: '5a422b891b54a676234d17fa',
+    title: 'First class tests',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+    likes: 1,
+    __v: 0
+  },
+]
+const listWithTwoFavoriteAuthors = [
+  {
+    _id: '5a422a851b54a676234d17f7',
+    title: 'React patterns',
+    author: 'Michael Chan',
+    url: 'https://reactpatterns.com/',
+    likes: 17,
+    __v: 0
+  },
+  {
+    _id: '5a422aa71b54a676234d17f8',
+    title: 'Go To Statement Considered Harmful',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+    likes: 5,
+    __v: 0
+  },
+  {
+    _id: '5a422b3a1b54a676234d17f9',
+    title: 'Canonical string reduction',
+    author: 'Edsger W. Dijkstra',
+    url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+    likes: 12,
+    __v: 0
+  },
 ]
 
 describe('dummy', () => {
@@ -132,7 +166,7 @@ describe('favorite blog', () => {
     expect(listHelper.favoriteBlog(listWithSixBlogs)).toStrictEqual({
       title: 'Canonical string reduction',
       author: 'Edsger W. Dijkstra',
-      likes: 12,
+      likes: 12
     })
   })
   test('of list with many favorites is the first blog with the most likes', () => {
@@ -140,6 +174,54 @@ describe('favorite blog', () => {
       title: 'React patterns',
       author: 'Michael Chan',
       likes: 7
+    })
+  })
+})
+
+describe('author with most blogs', () => {
+  test('of empty list is null', () => {
+    expect(listHelper.mostBlogs([])).toBe(null)
+  })
+  test('of 1 blog list is the single blog\'s author', () => {
+    expect(listHelper.mostBlogs(listWithOneBlog)).toStrictEqual({
+      author: 'Michael Chan',
+      blogs: 1
+    })
+  })
+  test('of 6 blog list is the author with the most blogs', () => {
+    expect(listHelper.mostBlogs(listWithSixBlogs)).toStrictEqual({
+      author: 'Robert C. Martin',
+      blogs: 3
+    })
+  })
+  test('of list with many authors with the most blogs is the last author alphabetically with most blogs', () => {
+    expect(listHelper.mostBlogs(listWithTwoFavorites)).toStrictEqual({
+      author: 'Robert C. Martin',
+      blogs: 1
+    })
+  })
+})
+
+describe('author with most likes', () => {
+  test('of empty list is null', () => {
+    expect(listHelper.mostLikes([])).toBe(null)
+  })
+  test('of 1 blog list is the single blog\'s author', () => {
+    expect(listHelper.mostLikes(listWithOneBlog)).toStrictEqual({
+      author: 'Michael Chan',
+      likes: 7
+    })
+  })
+  test('of 6 blog list is the author with most likes', () => {
+    expect(listHelper.mostLikes(listWithSixBlogs)).toStrictEqual({
+      author: 'Edsger W. Dijkstra',
+      likes: 17
+    })
+  })
+  test('of list with many authors with the most likes is the last author alphabetically with most likes', () => {
+    expect(listHelper.mostLikes(listWithTwoFavoriteAuthors)).toStrictEqual({
+      author: 'Michael Chan',
+      likes: 17
     })
   })
 })
