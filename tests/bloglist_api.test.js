@@ -44,13 +44,22 @@ test('saves blog post to database', async () => {
 
   await api.post('/api/blogs')
     .send(newBlog)
-    .expect(200)
+    .expect(201)
     .expect('Content-Type', /application\/json/)
   
   const res = await api.get('/api/blogs')
-  expect(res.body).toHaveLength(helper.data + 1)
-  expect(res.body).toContainEqual(newBlog)
+  const blogs = res.body.map(blog => {
+    return {
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes
+    }
+  })
+  expect(res.body).toHaveLength(helper.data.length + 1)
+  expect(blogs).toContainEqual(newBlog)
 })
+
 
 afterAll(() => {
   mongoose.connection.close()
