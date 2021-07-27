@@ -85,6 +85,7 @@ test('responds with 400 if title is not in request', async () => {
   await api.post('/api/blogs')
     .send(newBlog)
     .expect(400)
+    .expect('Content-Type', /application\/json/)
 })
 
 test('responds with 400 if url is not in request', async () => {
@@ -94,9 +95,10 @@ test('responds with 400 if url is not in request', async () => {
     likes: 3
   }
 
-  await api.post('api/blogs')
+  await api.post('/api/blogs')
     .send(newBlog)
     .expect(400)
+    .expect('Content-Type', /application\/json/)
 })
 
 afterAll(() => {
