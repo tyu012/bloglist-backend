@@ -27,6 +27,13 @@ test('returns the correct number of blog posts', async () => {
   expect(res.body).toHaveLength(helper.data.length)
 })
 
+test('identifier property is located in "id" of blog posts', async () => {
+  const res = await api.get('/api/blogs')
+  for (let blog of res.body) {
+    expect(blog.id).toBeDefined()
+  }
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
