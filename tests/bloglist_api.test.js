@@ -46,18 +46,35 @@ test('saves blog post to database', async () => {
     .send(newBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/)
-  
+
+  const finalBlogs = await helper.blogsInDb()
+  expect(finalBlogs).toHaveLength(helper.data.length + 1)
+  expect(finalBlogs).toContainEqual(newBlog)
+})
+
+test('defaults "likes" property to 0 if missing from request', async () => {
+  const newBlog = {
+    title: 'Example Blog',
+    author: 'Foo Bar',
+    url: 'https://example.com'
+  }
+
+  await api.post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
   const res = await api.get('/api/blogs')
   const blogs = res.body.map(blog => {
     return {
       title: blog.title,
       author: blog.author,
-      url: blog.url,
-      likes: blog.likes
+      url,
+      likes
     }
   })
-  expect(res.body).toHaveLength(helper.data.length + 1)
-  expect(blogs).toContainEqual(newBlog)
+
+  expect(blogs).toContainEqual()
 })
 
 

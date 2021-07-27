@@ -1,3 +1,5 @@
+const Blog = require("../models/blog")
+
 const data = [
   {
     _id: '5a422b891b54a676234d17fa',
@@ -49,6 +51,12 @@ const data = [
   }
 ]
 
+const blogsInDb = async () => {
+  const blogs = await Blog.find({})
+  return blogs.map(blog => blog.toJSON())
+}
+
 module.exports = {
   data,
+  blogsInDb,
 }
