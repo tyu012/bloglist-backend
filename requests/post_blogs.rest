@@ -16,8 +16,7 @@ Content-Type: application/json
 {
 	"title": "How To Use JavaScript",
 	"author": "Not a Beginner",
-	"url": "example.com/javascript",
-	"likes": 56
+	"url": "example.com/javascript"
 }
 
 ###
