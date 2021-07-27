@@ -75,6 +75,30 @@ test('defaults "likes" property to 0 if missing from request', async () => {
     .toContainEqual({ ...newBlog, likes: 0 })
 })
 
+test('responds with 400 if title is not in request', async () => {
+  const newBlog = {
+    author: 'Foo Bar',
+    url: 'https://example.com',
+    likes: 3
+  }
+
+  await api.post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+})
+
+test('responds with 400 if url is not in request', async () => {
+  const newBlog = {
+    title: 'Example Blog',
+    author: 'Foo Bar',
+    likes: 3
+  }
+
+  await api.post('api/blogs')
+    .send(newBlog)
+    .expect(400)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
