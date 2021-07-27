@@ -116,6 +116,7 @@ const listWithTwoFavoriteAuthors = [
   },
 ]
 
+/* 1 */
 // const mostBlogs = blogs => {
 //   if (blogs.length === 0) { return null }
 //   console.log('blogs', blogs)
@@ -140,32 +141,42 @@ const listWithTwoFavoriteAuthors = [
 
 // mostBlogs(listWithSixBlogs)
 
-const mostLikes = blogs => {
-  if (blogs.length === 0) { return null }
+/* 2 */
+// const mostLikes = blogs => {
+//   if (blogs.length === 0) { return null }
 
-  const likesByBlog = _.map(blogs, blog => {
-    return {
-      author: blog.author,
-      likes: blog.likes
-    }
-  })
-  console.log(likesByBlog)
+//   const likesByBlog = _.map(blogs, blog => {
+//     return {
+//       author: blog.author,
+//       likes: blog.likes
+//     }
+//   })
+//   console.log(likesByBlog)
 
-  const likesByAuthor = _.groupBy(likesByBlog, 'author')
-  console.log(likesByAuthor)
+//   const likesByAuthor = _.groupBy(likesByBlog, 'author')
+//   console.log(likesByAuthor)
 
-  const sumLikesByAuthor = _.map(likesByAuthor, (likesArray, authorName) => {
-    return {
-      author: authorName,
-      likes: likesArray.reduce((sumLikes, nextBlog) => sumLikes + nextBlog.likes, 0)
-    }
-  })
-  console.log(sumLikesByAuthor)
+//   const sumLikesByAuthor = _.map(likesByAuthor, (likesArray, authorName) => {
+//     return {
+//       author: authorName,
+//       likes: likesArray.reduce((sumLikes, nextBlog) => sumLikes + nextBlog.likes, 0)
+//     }
+//   })
+//   console.log(sumLikesByAuthor)
 
-  const sortedLikesByAuthor = _.sortBy(sumLikesByAuthor, ['likes', 'author'])
-  console.log(sortedLikesByAuthor)
+//   const sortedLikesByAuthor = _.sortBy(sumLikesByAuthor, ['likes', 'author'])
+//   console.log(sortedLikesByAuthor)
 
-  return sortedLikesByAuthor[sortedLikesByAuthor.length - 1]
+//   return sortedLikesByAuthor[sortedLikesByAuthor.length - 1]
+// }
+
+// mostLikes(listWithSixBlogs)
+
+const obj = {
+  a: 1,
+  b: 2,
+  c: 3,
 }
 
-mostLikes(listWithSixBlogs)
+console.log({ ...obj, a: 0 })
+console.log({ a: 0, ...obj })
