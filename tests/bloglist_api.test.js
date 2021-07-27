@@ -34,6 +34,24 @@ test('identifier property is located in "id" of blog posts', async () => {
   }
 })
 
+test('saves blog post to database', async () => {
+  const newBlog = {
+    title: 'Example Blog',
+    author: 'Foo Bar',
+    url: 'https://example.com',
+    likes: 3
+  }
+
+  await api.post('/api/blogs')
+    .send(newBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+  
+  const res = await api.get('/api/blogs')
+  expect(res.body).toHaveLength(helper.data + 1)
+  expect(res.body).toContainEqual(newBlog)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
