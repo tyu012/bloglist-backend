@@ -1,4 +1,4 @@
-const Blog = require("../models/blog")
+const Blog = require('../models/blog')
 
 const data = [
   {
@@ -56,7 +56,17 @@ const blogsInDb = async () => {
   return blogs.map(blog => blog.toJSON())
 }
 
+const removeExtraneousProperties = blog => {
+  return {
+    title: blog.title,
+    author: blog.author,
+    url: blog.url,
+    likes: blog.likes
+  }
+}
+
 module.exports = {
   data,
   blogsInDb,
+  removeExtraneousProperties,
 }

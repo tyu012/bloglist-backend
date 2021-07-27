@@ -48,8 +48,11 @@ test('saves blog post to database', async () => {
     .expect('Content-Type', /application\/json/)
 
   const finalBlogs = await helper.blogsInDb()
-  expect(finalBlogs).toHaveLength(helper.data.length + 1)
-  expect(finalBlogs).toContainEqual(newBlog)
+
+  expect(finalBlogs)
+    .toHaveLength(helper.data.length + 1)
+  expect(finalBlogs.map(helper.removeExtraneousProperties))
+    .toContainEqual(newBlog)
 })
 
 test('defaults "likes" property to 0 if missing from request', async () => {
@@ -64,19 +67,13 @@ test('defaults "likes" property to 0 if missing from request', async () => {
     .expect(201)
     .expect('Content-Type', /application\/json/)
 
-  const res = await api.get('/api/blogs')
-  const blogs = res.body.map(blog => {
-    return {
-      title: blog.title,
-      author: blog.author,
-      url,
-      likes
-    }
-  })
+  const finalBlogs = await helper.blogsInDb()
 
-  expect(blogs).toContainEqual()
+  expect(finalBlogs)
+    .toHaveLength(helper.data.length + 1)
+  expect(finalBlogs.map(helper.removeExtraneousProperties))
+    .toContainEqual({ ...newBlog, likes: 0 })
 })
-
 
 afterAll(() => {
   mongoose.connection.close()
