@@ -80,7 +80,7 @@ describe('saving posts to database', () => {
       .toContainEqual({ ...newBlog, likes: 0 })
   })
 
-  test('responds with 400 if title is not in request', async () => {
+  test('responds with 400 if title is not in GET request', async () => {
     const newBlog = {
       author: 'Foo Bar',
       url: 'https://example.com',
@@ -94,7 +94,7 @@ describe('saving posts to database', () => {
       .expect('Content-Type', /application\/json/)
   })
 
-  test('responds with 400 if url is not in request', async () => {
+  test('responds with 400 if url is not in GET request', async () => {
     const newBlog = {
       title: 'Example Blog',
       author: 'Foo Bar',
@@ -142,6 +142,40 @@ describe('updating a single blog', () => {
     expect(finalBlogs).toHaveLength(initialBlogs.length)
     expect(finalBlogs).toContainEqual(updatedBlog)
   }, 10000)
+
+  test('responds with 400 if title is not in PUT request', async () => {
+    const initialBlogs = await helper.blogsInDb()
+    const blogToUpdate = initialBlogs[0]
+    const updatedBlog = { ...blogToUpdate, likes: blogToUpdate.likes + 1, title: undefined }
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedBlog)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    const finalBlogs = await helper.blogsInDb()
+
+    expect(finalBlogs).toHaveLength(initialBlogs.length)
+    expect(finalBlogs).toContainEqual(blogToUpdate)
+  })
+
+  test('responds with 400 if url is not in PUT request', async () => {
+    const initialBlogs = await helper.blogsInDb()
+    const blogToUpdate = initialBlogs[0]
+    const updatedBlog = { ...blogToUpdate, likes: blogToUpdate.likes + 1, url: undefined }
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedBlog)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    const finalBlogs = await helper.blogsInDb()
+
+    expect(finalBlogs).toHaveLength(initialBlogs.length)
+    expect(finalBlogs).toContainEqual(blogToUpdate)
+  })
 })
 
 afterAll(() => {
