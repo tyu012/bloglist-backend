@@ -45,7 +45,8 @@ describe('saving posts to database', () => {
       likes: 3
     }
 
-    await api.post('/api/blogs')
+    await api
+      .post('/api/blogs')
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -65,7 +66,8 @@ describe('saving posts to database', () => {
       url: 'https://example.com'
     }
 
-    await api.post('/api/blogs')
+    await api
+      .post('/api/blogs')
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -85,7 +87,8 @@ describe('saving posts to database', () => {
       likes: 3
     }
 
-    await api.post('/api/blogs')
+    await api
+      .post('/api/blogs')
       .send(newBlog)
       .expect(400)
       .expect('Content-Type', /application\/json/)
@@ -98,10 +101,27 @@ describe('saving posts to database', () => {
       likes: 3
     }
 
-    await api.post('/api/blogs')
+    await api
+      .post('/api/blogs')
       .send(newBlog)
       .expect(400)
       .expect('Content-Type', /application\/json/)
+  })
+})
+
+describe('deleting a single blog', () => {
+  test('removes a blog with a specific id from database', async () => {
+    const initialBlogs = await helper.blogsInDb()
+    const blogToDelete = initialBlogs[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+    
+    const finalBlogs = await helper.blogsInDb()
+    
+    expect(finalBlogs).toHaveLength(initialBlogs.length - 1)
+    expect(finalBlogs).not.toContainEqual(blogToDelete)
   })
 })
 
