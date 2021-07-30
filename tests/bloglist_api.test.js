@@ -110,19 +110,38 @@ describe('saving posts to database', () => {
 })
 
 describe('deleting a single blog', () => {
-  test('removes a blog with a specific id from database', async () => {
+  test('responds with 204 when removing a single blog', async () => {
     const initialBlogs = await helper.blogsInDb()
     const blogToDelete = initialBlogs[0]
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
       .expect(204)
-    
+
     const finalBlogs = await helper.blogsInDb()
-    
+
     expect(finalBlogs).toHaveLength(initialBlogs.length - 1)
     expect(finalBlogs).not.toContainEqual(blogToDelete)
   })
+})
+
+describe('updating a single blog', () => {
+  test('updates the number of likes of a blog', async () => {
+    const initialBlogs = await helper.blogsInDb()
+    const blogToUpdate = initialBlogs[0]
+    const updatedBlog = { ...blogToUpdate, likes: blogToUpdate.likes + 1 }
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const finalBlogs = await helper.blogsInDb()
+
+    expect(finalBlogs).toHaveLength(initialBlogs.length)
+    expect(finalBlogs).toContainEqual(updatedBlog)
+  }, 10000)
 })
 
 afterAll(() => {
