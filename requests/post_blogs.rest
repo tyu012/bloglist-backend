@@ -42,3 +42,7 @@ Content-Type: application/json
 	"url": "blogs.example.com/dinner",
 	"likes": 98
 }
+
+###
+
+GET http://localhost:3003/api/users

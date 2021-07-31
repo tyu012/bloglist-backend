@@ -1,6 +1,24 @@
 /*
  * middleware.js
  * (c) 2021 Tim Yu
- * 
- * This file is temporarily empty until middleware is added.
  */
+
+const errorHandler = (error, request, response, next) => {
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
+
+  if (process.env.NODE_ENV !== 'test') {
+    logger.error(error.message)
+  } else {
+    console.error(error.message)
+  }
+
+  next(error)
+}
+
+module.exports = {
+  errorHandler,
+}

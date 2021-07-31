@@ -180,35 +180,143 @@ describe('updating a single blog', () => {
   })
 })
 
-describe('authenticating users', () => {
+describe('user authentication', () => {
   beforeEach(async () => {
     await User.deleteMany({})
-    
+
     const passwordHash = await bcrypt.hash('secret', 10)
     const user = new User({ username: 'root', passwordHash })
 
     await user.save()
   })
 
-  test('POST request creates new users', async () => {
-    const initialUsers = await helper.usersInDb()
+  describe('creating users', () => {
+    test('creates new users', async () => {
+      const initialUsers = await helper.usersInDb()
 
-    const newUser = {
-      username: 'foobar',
-      name: 'Foo Bar',
-      password: 'notsofast'
-    }
+      const newUser = {
+        username: 'foobar',
+        name: 'Foo Bar',
+        password: 'notsofast'
+      }
 
-    await api
-      .post('/api/users')
-      .send(newUser)
-      .expect(200)
-      .expect('Content-Type', /application\/json/)
-    
-    const finalUsers = await helper.usersInDb()
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
 
-    expect(finalUsers).toHaveLength(initialUsers.length + 1)
-    expect(finalUsers.map(u => u.username)).toContain('foobar')
+      const finalUsers = await helper.usersInDb()
+
+      expect(finalUsers).toHaveLength(initialUsers.length + 1)
+      expect(finalUsers.map(u => u.username)).toContain('foobar')
+    })
+
+    test('fails when username is not given', async () => {
+      const initialUsers = await helper.usersInDb()
+
+      const newUser = {
+        name: 'Foo Bar',
+        password: 'notsofast'
+      }
+
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+
+      const finalUsers = await helper.usersInDb()
+
+      expect(initialUsers).toHaveLength(finalUsers.length)
+    })
+
+    test('fails when password is not given', async () => {
+      const initialUsers = await helper.usersInDb()
+
+      const newUser = {
+        username: 'foobar',
+        name: 'Foo Bar'
+      }
+
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+
+      const finalUsers = await helper.usersInDb()
+
+      expect(initialUsers).toHaveLength(finalUsers.length)
+    })
+
+    test('fails when username is less than 3 characters long', async () => {
+      const initialUsers = await helper.usersInDb()
+
+      const newUser = {
+        username: 'fo',
+        name: 'Foo Bar',
+        password: 'notsofast'
+      }
+
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+
+      const finalUsers = await helper.usersInDb()
+
+      expect(initialUsers).toHaveLength(finalUsers.length)
+    })
+
+    test('fails when password is less than 3 characters long', async () => {
+      const initialUsers = await helper.usersInDb()
+
+      const newUser = {
+        username: 'foobar',
+        name: 'Foo Bar',
+        password: 'no'
+      }
+
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+
+      const finalUsers = await helper.usersInDb()
+
+      expect(initialUsers).toHaveLength(finalUsers.length)
+    })
+
+    test('fails when username is not unique', async () => {
+      const initialUsers = await helper.usersInDb()
+
+      const newUser = {
+        username: 'root',
+        name: 'Foo Bar',
+        password: 'notsofast'
+      }
+
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+
+      const finalUsers = await helper.usersInDb()
+
+      expect(initialUsers).toHaveLength(finalUsers.length)
+    })
+  })
+
+  describe('retrieving users', () => {
+    test('returns users in JSON format', async () => {
+      const usersFromApi = await api
+        .get('/api/users')
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      const usersInDb = await helper.usersInDb()
+
+      expect(usersFromApi.body).toHaveLength(usersInDb.length)
+    })
   })
 })
 
