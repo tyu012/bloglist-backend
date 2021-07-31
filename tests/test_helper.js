@@ -1,4 +1,5 @@
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const data = [
   {
@@ -56,6 +57,11 @@ const blogsInDb = async () => {
   return blogs.map(blog => blog.toJSON())
 }
 
+const usersInDb = async () => {
+  const users = await User.find({})
+  return users.map(user => user.toJSON())
+}
+
 const removeExtraneousProperties = blog => {
   return {
     title: blog.title,
@@ -68,5 +74,6 @@ const removeExtraneousProperties = blog => {
 module.exports = {
   data,
   blogsInDb,
+  usersInDb,
   removeExtraneousProperties,
 }

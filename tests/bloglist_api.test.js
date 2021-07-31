@@ -1,7 +1,9 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('./test_helper')
 
 const api = supertest(app)
@@ -175,6 +177,38 @@ describe('updating a single blog', () => {
 
     expect(finalBlogs).toHaveLength(initialBlogs.length)
     expect(finalBlogs).toContainEqual(blogToUpdate)
+  })
+})
+
+describe('authenticating users', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+    
+    const passwordHash = await bcrypt.hash('secret', 10)
+    const user = new User({ username: 'root', passwordHash })
+
+    await user.save()
+  })
+
+  test('POST request creates new users', async () => {
+    const initialUsers = await helper.usersInDb()
+
+    const newUser = {
+      username: 'foobar',
+      name: 'Foo Bar',
+      password: 'notsofast'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+    
+    const finalUsers = await helper.usersInDb()
+
+    expect(finalUsers).toHaveLength(initialUsers.length + 1)
+    expect(finalUsers.map(u => u.username)).toContain('foobar')
   })
 })
 
