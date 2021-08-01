@@ -8,8 +8,10 @@ const helper = require('./test_helper')
 
 const api = supertest(app)
 
-const token = helper.getToken()
-const auth = `bearer ${token}`
+// const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxhcyIsImlhdCI6MTYyNzc3ODU1Mn0.y7Nbbu8aDLNlwwNClx9YscDSe3RnBYEvU-950nf2GRY'
+// const auth = `Bearer ${token}`
+
+var auth
 
 beforeEach(async () => {
 
@@ -28,7 +30,9 @@ beforeEach(async () => {
     let userObject = new User(user)
     await userObject.save()
   }
-})
+
+  auth = `Bearer ${await helper.getToken()}`
+}, 50000)
 
 describe('blog post storage and retrieval', () => {
   describe('retrieving blog posts', () => {
@@ -78,6 +82,7 @@ describe('blog post storage and retrieval', () => {
 
       await api
         .post('/api/blogs')
+        .set('Authorization', auth)
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -99,6 +104,7 @@ describe('blog post storage and retrieval', () => {
 
       await api
         .post('/api/blogs')
+        .set('Authorization', auth)
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -120,6 +126,7 @@ describe('blog post storage and retrieval', () => {
 
       await api
         .post('/api/blogs')
+        .set('Authorization', auth)
         .send(newBlog)
         .expect(400)
         .expect('Content-Type', /application\/json/)
@@ -134,6 +141,7 @@ describe('blog post storage and retrieval', () => {
 
       await api
         .post('/api/blogs')
+        .set('Authorization', auth)
         .send(newBlog)
         .expect(400)
         .expect('Content-Type', /application\/json/)
@@ -147,7 +155,10 @@ describe('blog post storage and retrieval', () => {
         likes: 3
       }
 
-      await api.post('/api/blogs').send(newBlog)
+      await api
+        .post('/api/blogs')
+        .set('Authorization', auth)
+        .send(newBlog)
 
       const blogs = await helper.blogsInDb()
       const targetBlog = blogs.find(b => b.title === newBlog.title)
@@ -162,7 +173,10 @@ describe('blog post storage and retrieval', () => {
         likes: 3
       }
 
-      await api.post('/api/blogs').send(newBlog)
+      await api
+        .post('/api/blogs')
+        .set('Authorization', auth)
+        .send(newBlog)
 
       const targetBlog = (await helper.blogsInDb())
         .find(b => b.title === newBlog.title)
@@ -171,6 +185,28 @@ describe('blog post storage and retrieval', () => {
       const userBlogs = targetBlogUser.blogs.map(b => b.toString())
 
       expect(userBlogs).toContain(targetBlog.id)
+    })
+
+    test('responds with 401 if no valid authorization header is provided', async () => {
+      const newBlog = {
+        title: 'Example Blog',
+        author: 'Foo Bar',
+        url: 'https://example.com',
+        likes: 3
+      }
+
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(401)
+        .expect('Content-Type', /application\/json/)
+
+      const finalBlogs = await helper.blogsInDb()
+
+      expect(finalBlogs)
+        .toHaveLength(helper.data.length)
+      expect(finalBlogs.map(helper.removeExtraneousProperties))
+        .not.toContainEqual(newBlog)
     })
   })
 
@@ -241,6 +277,8 @@ describe('blog post storage and retrieval', () => {
       expect(finalBlogs).toHaveLength(initialBlogs.length)
       expect(finalBlogs).toContainEqual(blogToUpdate)
     })
+
+    
   })
 })
 

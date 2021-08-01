@@ -111,8 +111,8 @@ const removeExtraneousProperties = blog => {
 }
 
 const getToken = async () => {
-  const { username, id } = (await generateUsers())[0]
-  return jwt.sign({ username, id }, process.env.SECRET, { expiresIn: 60*10 })
+  const { username, _id } = (await generateUsers())[0]
+  return jwt.sign({ username, id: _id }, process.env.SECRET, { expiresIn: 60 })
 }
 
 module.exports = {
