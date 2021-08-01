@@ -5,7 +5,8 @@ Content-Type: application/json
 	"title": "My First Blog!",
 	"author": "Foo Bar",
 	"url": "example.com",
-	"likes": 1
+	"likes": 1,
+	"user": "6105de38fdc3961917578a2d"
 }
 
 ###
@@ -16,7 +17,8 @@ Content-Type: application/json
 {
 	"title": "How To Use JavaScript",
 	"author": "Not a Beginner",
-	"url": "example.com/javascript"
+	"url": "example.com/javascript",
+	"user": "6105de38fdc3961917578a2d"
 }
 
 ###
@@ -28,7 +30,8 @@ Content-Type: application/json
 	"title": "Breakfast Recipes Daily",
 	"author": "Breakfast for Dinner",
 	"url": "blogs.example.com",
-	"likes": 99
+	"likes": 99,
+	"user": "6105de38fdc3961917578a2d"
 }
 
 ###
@@ -40,7 +43,8 @@ Content-Type: application/json
 	"title": "Dinner Recipes Daily",
 	"author": "Dinner for Breakfast",
 	"url": "blogs.example.com/dinner",
-	"likes": 98
+	"likes": 98,
+	"user": "6105de38fdc3961917578a2d"
 }
 
 ###

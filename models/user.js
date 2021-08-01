@@ -14,6 +14,12 @@ const userSchema = new mongoose.Schema({
     required: true,
     // the password minimum length validation is done in the controller
   },
+  blogs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Blog'
+    }
+  ],
 })
 
 userSchema.plugin(uniqueValidator)
