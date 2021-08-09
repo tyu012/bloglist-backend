@@ -11,7 +11,7 @@ const api = supertest(app)
 // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxhcyIsImlhdCI6MTYyNzc3ODU1Mn0.y7Nbbu8aDLNlwwNClx9YscDSe3RnBYEvU-950nf2GRY'
 // const auth = `Bearer ${token}`
 
-var auth
+let auth
 
 beforeEach(async () => {
 
@@ -211,18 +211,42 @@ describe('blog post storage and retrieval', () => {
   })
 
   describe('deleting a single blog', () => {
-    test('responds with 204 when removing a single blog', async () => {
+    test('responds with 401 when removing a single blog without authentication', async () => {
       const initialBlogs = await helper.blogsInDb()
       const blogToDelete = initialBlogs[0]
 
       await api
         .delete(`/api/blogs/${blogToDelete.id}`)
+        .expect(401)
+
+      const finalBlogs = await helper.blogsInDb()
+
+      expect(finalBlogs).toHaveLength(initialBlogs.length)
+      expect(finalBlogs).toContainEqual(blogToDelete)
+    })
+
+    test('responds with 204 when removing a single blog with authentication', async () => {
+      const newBlog = {
+        title: 'Example Blog',
+        author: 'Foo Bar',
+        url: 'https://example.com',
+        likes: 3
+      }
+
+      const blogInDb = await api
+        .post('/api/blogs')
+        .set('Authorization', auth)
+        .send(newBlog)
+      
+      await api
+        .delete(`/api/blogs/${blogInDb.body.id}`)
+        .set('Authorization', auth)
         .expect(204)
 
       const finalBlogs = await helper.blogsInDb()
 
-      expect(finalBlogs).toHaveLength(initialBlogs.length - 1)
-      expect(finalBlogs).not.toContainEqual(blogToDelete)
+      expect(finalBlogs).toHaveLength(helper.data.length)
+      expect(finalBlogs).not.toContainEqual(blogInDb)
     })
   })
 
@@ -278,7 +302,7 @@ describe('blog post storage and retrieval', () => {
       expect(finalBlogs).toContainEqual(blogToUpdate)
     })
 
-    
+
   })
 })
 
