@@ -8,13 +8,9 @@ const helper = require('./test_helper')
 
 const api = supertest(app)
 
-// const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxhcyIsImlhdCI6MTYyNzc3ODU1Mn0.y7Nbbu8aDLNlwwNClx9YscDSe3RnBYEvU-950nf2GRY'
-// const auth = `Bearer ${token}`
-
 let auth
 
 beforeEach(async () => {
-
   await Blog.deleteMany({})
 
   for (let blog of helper.data) {
