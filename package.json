@@ -8,7 +8,8 @@
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
     "lint": "eslint .",
-    "build:ui": "rm -rf build && cd ../frontend && npm run build --prod && cp -r build ../backend"
+    "build:ui": "rm -rf build && cd ../frontend && npm run build --prod && cp -r build ../backend",
+    "build:dev": "npm run build:ui && npm run dev"
   },
   "author": "Tim Yu",
   "license": "ISC",
