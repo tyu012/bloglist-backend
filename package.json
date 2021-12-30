@@ -9,7 +9,8 @@
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
     "lint": "eslint .",
     "build:ui": "rm -rf build && cd ../frontend && npm run build --prod && cp -r build ../backend",
-    "build:dev": "npm run build:ui && npm run dev"
+    "build:dev": "npm run build:ui && npm run dev",
+    "start:test": "cross-env NODE_ENV=test node index.js"
   },
   "author": "Tim Yu",
   "license": "ISC",
