@@ -308,8 +308,9 @@ describe('blog post storage and retrieval', () => {
 
       await api
         .post(`/api/blogs/${targetBlogId}/comments`)
-        .send(comment)
+        .send({ comment })
         .expect(200)
+        .expect('Content-Type', /application\/json/)
 
       const finalBlogs = await helper.blogsInDb()
       const updatedTargetBlog = finalBlogs.find(b => b.id === targetBlogId)

@@ -64,7 +64,7 @@ blogsRouter.delete('/:id', async (request, response) => {
   const target = await Blog.findById(request.params.id)
 
   if (target.user.toString() !== user.id.toString()) {
-    return response.status(401).json({ error: 'incorrect user'})
+    return response.status(401).json({ error: 'incorrect user' })
   }
 
   await Blog.findByIdAndDelete(request.params.id)
@@ -98,6 +98,27 @@ blogsRouter.put('/:id', async (request, response) => {
     { new: true }
   )
   response.json(updatedBlog)
+})
+
+blogsRouter.post('/:id/comments', async (request, response) => {
+  const body = request.body
+
+  const blog = await Blog.findById(request.params.id)
+  const blogWithComment = new Blog({
+    _id: blog.id,
+    title: blog.title,
+    author: blog.author,
+    url: blog.url,
+    likes: blog.likes || 0,
+    comments: blog.comments.concat(body.comment),
+  })
+
+  const updatedBlog = await Blog.findByIdAndUpdate(
+    request.params.id,
+    blogWithComment,
+    { new: true }
+  )
+  response.status(200).json(updatedBlog)
 })
 
 module.exports = blogsRouter
