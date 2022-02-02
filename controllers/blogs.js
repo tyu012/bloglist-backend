@@ -40,6 +40,7 @@ blogsRouter.post('/', async (request, response) => {
     url: body.url,
     likes: body.likes || 0,
     user: userInDb._id,
+    comments: [],
   })
   const result = await blog.save()
   userInDb.blogs = userInDb.blogs.concat(result._id)
@@ -87,7 +88,8 @@ blogsRouter.put('/:id', async (request, response) => {
     title: body.title,
     author: body.author,
     url: body.url,
-    likes: body.likes || 0
+    likes: body.likes || 0,
+    comments: body.comments,
   })
 
   const updatedBlog = await Blog.findByIdAndUpdate(

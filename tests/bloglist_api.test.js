@@ -298,7 +298,24 @@ describe('blog post storage and retrieval', () => {
       expect(finalBlogs).toContainEqual(blogToUpdate)
     })
 
+    test('adding comment to a single blog', async () => {
+      const initialBlogs = await helper.blogsInDb()
+      const targetBlog = initialBlogs[0]
+      const targetBlogId = targetBlog.id
+      const comment = 'Hello, world!'
 
+      expect(targetBlog.comments).toHaveLength(0)
+
+      await api
+        .post(`/api/blogs/${targetBlogId}/comments`)
+        .send(comment)
+        .expect(200)
+
+      const finalBlogs = await helper.blogsInDb()
+      const updatedTargetBlog = finalBlogs.find(b => b.id === targetBlogId)
+
+      expect(updatedTargetBlog.comments).toHaveLength(1)
+    })
   })
 })
 
