@@ -70,4 +70,11 @@ DELETE http://localhost:3003/api/blogs/61246cf19dd3da03b9d90fae
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJpZCI6IjYxMjQ2YWY2OWRkM2RhMDNiOWQ5MGY5ZSIsImlhdCI6MTYyOTc3Njc5Nn0.AOCMxRipUfzZ2gXAIlyViCPQLXfAPq725wjvX2ah3ug
 
-### Put blog
+### Add comment
+
+POST http://localhost:3003/api/blogs/61246ca89dd3da03b9d90fa6/comments
+Content-Type: application/json
+
+{
+  "comment": "Hello, world!"
+}
